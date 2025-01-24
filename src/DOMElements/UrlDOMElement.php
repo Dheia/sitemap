@@ -134,11 +134,17 @@ class UrlDOMElement implements ConvertingToDOMElement
      */
     public function setLastmod(string|DateTime $lastmod): void
     {
-        if (is_string($lastmod)) {
-            $lastmod = new DateTime($lastmod);
+       if (is_string($lastmod)) {
+            // حاول معالجة الطابع الزمني
+            if (ctype_digit($lastmod)) {
+                $lastmod = new DateTime("@$lastmod"); // استخدام @ لتحويل الطابع الزمني
+            } else {
+                $lastmod = new DateTime($lastmod); // تحويل السلسلة إلى DateTime
+            }
         }
-
-        $this->lastmod = $lastmod;
+    
+        if($lastmod instanceof DateTime)
+          $this->lastmod = $lastmod;
     }
 
     /**
